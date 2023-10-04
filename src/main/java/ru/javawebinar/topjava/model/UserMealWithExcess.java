@@ -2,7 +2,7 @@ package ru.javawebinar.topjava.model;
 
 import java.time.LocalDateTime;
 
-public class UserMealWithExcess implements Comparable<UserMealWithExcess> {
+public class UserMealWithExcess {
     private final LocalDateTime dateTime;
 
     private final String description;
@@ -31,10 +31,5 @@ public class UserMealWithExcess implements Comparable<UserMealWithExcess> {
 
     public LocalDateTime getDateTime() {
         return dateTime;
-    }
-
-    @Override
-    public int compareTo(UserMealWithExcess o) {
-        return this.getDateTime().toLocalDate().compareTo(o.getDateTime().toLocalDate());
     }
 }
