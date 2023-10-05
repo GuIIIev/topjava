@@ -65,7 +65,7 @@ public class UserMealsUtil {
                 .collect(Collectors.toList());
     }
 
-    private static LocalDate apply(UserMeal mealDate) {
-        return LocalDate.from(mealDate.getDateTime());
+    private static LocalDate apply(UserMeal meal) {
+        return LocalDate.from(meal.getDateTime());
     }
 }
