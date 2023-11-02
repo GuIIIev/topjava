@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Repository
-public class InMemoryUserRepository implements UserRepository {
+public class InMemoryUserRepository extends InMemoryBaseRepository<User> implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
 
     private final Map<Integer, User> repository = new ConcurrentHashMap<>();
@@ -24,41 +24,16 @@ public class InMemoryUserRepository implements UserRepository {
     public static final int ADMIN_ID = 2;
 
     @Override
-    public boolean delete(int id) {
-        log.info("delete {}", id);
-        return repository.remove(id) != null;
-    }
-
-    @Override
-    public User save(User user) {
-        log.info("save {}", user);
-        if (user.isNew()) {
-            user.setId(counter.incrementAndGet());
-            repository.put(user.getId(), user);
-            return user;
-        }
-        return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
-    }
-
-    @Override
-    public User get(int id) {
-        log.info("get {}", id);
-        return repository.get(id);
-    }
-
-    @Override
     public List<User> getAll() {
-        log.info("getAll");
-        return repository.values().stream()
-                .sorted((Comparator.comparing(AbstractNamedEntity::getName)))
+        return getCollection().stream()
+                .sorted(Comparator.comparing(User::getName).thenComparing(User::getEmail))
                 .collect(Collectors.toList());
     }
 
     @Override
     public User getByEmail(String email) {
-        log.info("getByEmail {}", email);
-        return getAll().stream()
-                .filter(o1 -> o1.getEmail().equals(email))
+        return getCollection().stream()
+                .filter(u -> email.equals(u.getEmail()))
                 .findFirst()
                 .orElse(null);
     }
